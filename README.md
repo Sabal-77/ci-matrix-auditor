@@ -18,8 +18,8 @@ multi-backend CI matrix (CPU, MPI, CUDA) before committing to a design.
 
 ## Setup
 ```bash
-git clone https://github.com/yourname/gprmax-ci-matrix-lab
-cd gprmax-ci-matrix-lab
+git clone https://github.com/Sabal-77/ci-matrix-auditor
+cd ci-matrix-auditor
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
