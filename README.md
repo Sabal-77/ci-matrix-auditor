@@ -58,13 +58,12 @@ pytest tests/ -v --cov=core --cov=analysis --cov-report=term-missing
 | `outputs/cache_hit_rate.png` | Cache decisions across representative PRs |
 | `outputs/job_artifacts/` | Per-job logs if `--run-jobs` used |
 
-## Key Findings (fill in after running)
+## Key Findings
 
 - Total matrix configurations: **27**
 - After exclusions: **21** (exclusion rate: **22%**)
 - Execution waves: **2** (wave 1: CPU+CUDA, wave 2: MPI)
 - Cache hit rate on typical Python-only PRs: **~78%**
-- Infrastructure failures as % of all failures: _[fill in]_
 - Estimated CI wall-clock with caching: **~8 minutes**
 
 ## Project Structure
