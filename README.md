@@ -1,7 +1,7 @@
 # ci-matrix-auditor
 
 A local simulation tool for auditing and understanding the CI matrix
-design for gprMax before writing a single GitHub Actions workflow.
+design before writing a single GitHub Actions workflow.
 
 The goal is to think rigorously about the dependency graph, cache behavior, and failure modes of a
 multi-backend CI matrix (CPU, MPI, CUDA) before committing to a design.
