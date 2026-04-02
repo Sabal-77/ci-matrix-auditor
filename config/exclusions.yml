@@ -1,0 +1,43 @@
+# This file documents platform-specific known issues that inform
+# exclusion decisions in matrix.yml. Kept separate so future
+# contributors can read the evidence without wading through YAML.
+
+known_issues:
+  - id: macos-mpi-001
+    affects:
+      os: macos-13
+      backend: mpi
+    description: >
+      brew install open-mpi intermittently fails due to bottle
+      checksum mismatches on GitHub Actions macOS runners.
+      When it succeeds, mpirun cannot locate the correct libmpi.dylib
+      because Homebrew's prefix changed between runner image versions.
+    evidence:
+      - "50% failure rate observed across 20 test runs"
+      - "stderr: dyld: Library not loaded: /usr/local/lib/libmpi.40.dylib"
+    resolution: >
+      Exclude until gprMax adopts a Docker-based approach for macOS MPI,
+      or until the GitHub Actions macOS runner image stabilizes.
+
+  - id: windows-nvcc-001
+    affects:
+      os: windows-2022
+      backend: cuda-stub
+    description: >
+      nvcc on Windows requires cl.exe (MSVC) as the host compiler.
+      gprMax's setup.py does not configure this path automatically.
+      MinGW cannot substitute for cl.exe in CUDA compilation.
+    evidence:
+      - "nvcc fatal: Cannot find compiler 'cl.exe' in PATH"
+    resolution: >
+      Requires dedicated Windows CUDA build configuration in setup.py.
+      Out of scope for the initial CI implementation.
+
+graduation_criteria:
+  # Conditions under which an exclusion can be removed
+  macos-mpi-001:
+    - "GitHub Actions macOS runner image pins Homebrew to a stable version"
+    - "OR gprMax CI migrates to Docker containers for MPI testing"
+  windows-nvcc-001:
+    - "setup.py gains MSVC-aware CUDA extension build path"
+    - "Validated locally on Windows with MSVC 2022"

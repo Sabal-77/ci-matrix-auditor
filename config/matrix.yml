@@ -1,0 +1,96 @@
+schema_version: 1
+
+axes:
+  os:
+    - ubuntu-22.04
+    - macos-13
+    - windows-2022
+  python:
+    - "3.9"
+    - "3.10"
+    - "3.11"
+  backend:
+    - cpu
+    - mpi
+    - cuda-stub
+
+exclusions:
+  - os: macos-13
+    backend: mpi
+    reason: >
+      OpenMPI on macOS GitHub runners is unreliable.
+      brew install open-mpi timing is non-deterministic and PATH
+      configuration for mpirun differs across runner images.
+      Tracked in gprMax issue #341.
+
+  - os: windows-2022
+    backend: mpi
+    reason: >
+      MPICH on Windows requires Visual Studio build tools and
+      manual DLL path configuration that is not available on
+      standard GitHub-hosted Windows runners.
+
+  - os: windows-2022
+    backend: cuda-stub
+    reason: >
+      nvcc on Windows requires MSVC as the host compiler.
+      MSVC linkage with gprMax's Cython extensions is out of
+      scope for this CI cycle. Revisit in a follow-up PR.
+
+  - os: macos-13
+    backend: cuda-stub
+    reason: >
+      CUDA is not supported on Apple Silicon (ARM64).
+      macOS-13 runners on GitHub Actions are ARM-based.
+
+dependencies:
+  cpu:
+    all:
+      system: []
+      python:
+        - cython>=3.0
+        - numpy>=1.24
+        - h5py>=3.8
+        - matplotlib>=3.7
+
+  mpi:
+    ubuntu-22.04:
+      system:
+        - openmpi-bin
+        - libopenmpi-dev
+      python:
+        - mpi4py>=3.1
+    macos-13:
+      system:
+        - open-mpi
+      python:
+        - mpi4py>=3.1
+    windows-2022:
+      system: []
+      python: []
+
+  cuda-stub:
+    ubuntu-22.04:
+      system:
+        - cuda-toolkit-nvcc-only
+      python: []
+    macos-13:
+      system: []
+      python: []
+    windows-2022:
+      system: []
+      python: []
+
+timing_estimates:
+  cold_build_minutes:
+    cpu: 4.5
+    mpi: 5.5
+    cuda-stub: 2.0
+  cached_build_minutes:
+    cpu: 0.5
+    mpi: 1.0
+    cuda-stub: 0.3
+  test_minutes:
+    cpu: 3.0
+    mpi: 4.0
+    cuda-stub: 0.5
